@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../model/categoris.dart';
 import '../model/channel.dart';
 import '../services/api_service.dart';
+import '../utilities/keys.dart';
 import '../widgets/drawer.dart';
 
 class Home extends StatefulWidget {
@@ -29,7 +30,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   }
 
   _initChannel() async {
-    Channel channel = await APIService.instance.fetchChannel(channelId: 'UC7HAzXWJi2EgqMuBlpJ22iQ');
+    Channel channel = await APIService.instance.fetchChannel(channelId: YOUTUBE_CHANNEL_ID);
     setState(() {
       _channel = channel;
     });
