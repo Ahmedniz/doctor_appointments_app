@@ -4,7 +4,9 @@ A new Flutter project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is a Doctor's appointment app built in Flutter framework.
+
+You just need to configure the firebase to run this flutter app
 
 A few resources to get you started if this is your first Flutter project:
 
