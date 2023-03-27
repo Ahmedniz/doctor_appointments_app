@@ -1,12 +1,14 @@
 # doctor_app
 
-A new Flutter project.
+Doctor App.
 
 ## Getting Started
 
 This project is a Doctor's appointment app built in Flutter framework.
 
-You just need to configure the firebase to run this flutter app
+You just need to configure the firebase to run this flutter app.
+
+I'll keep updating this app.
 
 A few resources to get you started if this is your first Flutter project:
 
