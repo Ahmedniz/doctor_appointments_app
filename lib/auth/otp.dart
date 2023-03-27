@@ -101,9 +101,9 @@ class _OtpScreenState extends State<OtpScreen> {
 
                       if (value.user != null) {
                         if (userName) {
-                          Navigator.pushNamed(context, '/userInfo');
+                          Navigator.pushNamed(context, '/');
                         } else {
-                          Navigator.pushReplacementNamed(context, '/');
+                          Navigator.pushReplacementNamed(context, '/phoneAuthPage');
                         }
                       }
                     });
@@ -179,9 +179,9 @@ class _OtpScreenState extends State<OtpScreen> {
 
                         if (value.user != null) {
                           if (userName) {
-                            Navigator.pushNamed(context, '/userInfo');
+                            Navigator.pushNamed(context, '/');
                           } else {
-                            Navigator.pushReplacementNamed(context, '/');
+                            Navigator.pushReplacementNamed(context, '/phoneAuthPage');
                           }
                         }
                       });

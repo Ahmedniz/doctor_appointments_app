@@ -95,7 +95,7 @@ class MyDrawer extends StatelessWidget {
           ListTile(
             onTap: () {
               FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushNamed('/');
+              Navigator.of(context).pop();
             },
             leading: Icon(
               Icons.logout,

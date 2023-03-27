@@ -22,14 +22,18 @@ class _HomeState extends State<BottomNavigator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        showUnselectedLabels: true,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: const Color.fromARGB(255, 39, 39, 39),
-        currentIndex: _currentPageIndex,
-        onTap: (int index) {
+      bottomNavigationBar: NavigationBar(
+        elevation: 10,
+        backgroundColor: const Color.fromARGB(255, 240, 240, 240),
+        height: 60,
+        selectedIndex: _currentPageIndex,
+        onDestinationSelected: (int index) {
           setState(() {
-            _currentPageIndex = index;
+            if (FirebaseAuth.instance.currentUser == null && index == 1 || index == 2) {
+              _currentPageIndex = 0; // Set to Home if user is not authenticated and index is Appointments
+            } else {
+              _currentPageIndex = index;
+            }
           });
           if (index == 1) {
             FirebaseAuth.instance.authStateChanges().listen((User? user) {
@@ -39,34 +43,49 @@ class _HomeState extends State<BottomNavigator> {
                 _pageController.jumpToPage(index);
               }
             });
+          } else if (index == 2) {
+            FirebaseAuth.instance.authStateChanges().listen((User? user) {
+              if (user == null) {
+                Navigator.of(context).pushNamed('/records');
+              } else {
+                _pageController.jumpToPage(index);
+              }
+            });
           } else {
             _pageController.jumpToPage(index);
           }
         },
-        items: const [
-          BottomNavigationBarItem(
+        destinations: const [
+          NavigationDestination(
+            selectedIcon: Icon(Icons.home_filled),
             icon: Icon(Icons.home),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.date_range),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.date_range),
+            icon: Icon(Icons.date_range_outlined),
             label: 'Appointments',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.drive_folder_upload),
             label: 'Records',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.health_and_safety),
             label: 'Healthzone',
           ),
         ],
       ),
       body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: (int index) {
           setState(() {
-            _currentPageIndex = index;
+            if (FirebaseAuth.instance.currentUser == null && index == 1) {
+              _currentPageIndex = 0; // Set to Home if user is not authenticated and index is Appointments
+            } else {
+              _currentPageIndex = index;
+            }
           });
         },
         children: [
@@ -77,11 +96,22 @@ class _HomeState extends State<BottomNavigator> {
               if (snapshot.hasData) {
                 return const Appointments();
               } else {
+                _currentPageIndex = 0;
                 return const PhoneAuthPage();
               }
             },
           ),
-          const Records(),
+          StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (_, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                return const Records();
+              } else {
+                _currentPageIndex = 0;
+                return const PhoneAuthPage();
+              }
+            },
+          ),
           const HealthZone(),
         ],
       ),

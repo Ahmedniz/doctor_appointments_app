@@ -1,4 +1,6 @@
 import 'package:doctor_app/model/video.dart';
+import 'package:doctor_app/screens/find_doctor.dart';
+import 'package:doctor_app/screens/search_location.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -47,6 +49,25 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
     CategoryListItems(categoryName: 'Lahore University of Management Sciences', imageUrl: 'assets/images/hospitals/lums.jpg', id: '8'),
   ];
 
+  Route _createRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return page;
+      },
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(0.0, 1.0);
+        const end = Offset.zero;
+        final tween = Tween(begin: begin, end: end);
+        final offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(
+          position: offsetAnimation,
+          child: child,
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -80,16 +101,15 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
                       Icons.menu,
                       color: Colors.white,
                     )
-                  : const Text(
+                  : Text(
                       'Sign up',
-                      style: TextStyle(color: Colors.white),
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
                     ),
             );
           }),
         ),
         title: const Text(
           'Welcome',
-          style: TextStyle(color: Colors.white),
         ),
         actions: [
           Row(
@@ -97,7 +117,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
               const Text('Location'),
               IconButton(
                 icon: const Icon(Icons.arrow_drop_down),
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).push(_createRoute(const LocationPage())),
               )
             ],
           )
@@ -136,60 +156,69 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
                           Row(
                             children: [
                               Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // Navigator.of(context).pushNamed('/findDoctor');
+                                    Navigator.of(context).push(_createRoute(const FindDoctor()));
+                                  },
+                                  child: Card(
+                                    color: const Color.fromARGB(255, 255, 174, 98),
+                                    elevation: 0,
+                                    child: Column(
+                                      // for label and image
+                                      children: [
+                                        const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Align(alignment: Alignment.topLeft, child: Text('Doctor \nAppointment')),
+                                        ),
+                                        Container(
+                                          alignment: Alignment.bottomCenter,
+                                          height: 150,
+                                          width: 120,
+                                          child: Image.asset('assets/images/doctor.png'),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ), // appiont
+                              GestureDetector(
+                                onTap: () => Navigator.of(context).push(_createRoute(const FindDoctor())),
                                 child: Card(
-                                  color: const Color.fromARGB(255, 255, 174, 98),
+                                  color: const Color.fromARGB(255, 144, 160, 255),
                                   elevation: 0,
                                   child: Column(
                                     // for label and image
                                     children: [
-                                      const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Align(alignment: Alignment.topLeft, child: Text('Doctor \nAppointment')),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 8),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: const [
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 8),
+                                              child: Text('Video \nConsultation'),
+                                            ),
+                                            SizedBox(
+                                              width: 30,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 5),
+                                              child: Icon(
+                                                Icons.video_chat,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                       Container(
                                         alignment: Alignment.bottomCenter,
                                         height: 150,
                                         width: 120,
-                                        child: Image.asset('assets/images/doctor.png'),
+                                        child: Image.asset('assets/images/doctorm.png'),
                                       )
                                     ],
                                   ),
-                                ),
-                              ), // appiont
-                              Card(
-                                color: const Color.fromARGB(255, 144, 160, 255),
-                                elevation: 0,
-                                child: Column(
-                                  // for label and image
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 8),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: const [
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 8),
-                                            child: Text('Video \nConsultation'),
-                                          ),
-                                          SizedBox(
-                                            width: 30,
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 5),
-                                            child: Icon(
-                                              Icons.video_chat,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      alignment: Alignment.bottomCenter,
-                                      height: 150,
-                                      width: 120,
-                                      child: Image.asset('assets/images/doctorm.png'),
-                                    )
-                                  ],
                                 ),
                               ), // video
                             ],
@@ -264,6 +293,8 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: TextField(
+                              onTap: () => Navigator.of(context).push(_createRoute(const FindDoctor())),
+                              readOnly: true,
                               decoration: InputDecoration(
                                 hintText: 'Search...',
                                 prefixIcon: const Icon(Icons.search),
@@ -524,60 +555,70 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
                     ),
                   ),
                   Card(
-                    child: SizedBox(
-                      height: 120,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: hospitals.length,
-                        itemBuilder: (context, index) {
-                          return SizedBox(
-                            width: 200,
-                            child: ListTile(
-                              title: ClipRRect(
-                                borderRadius: BorderRadius.circular(13.0),
-                                child: SizedBox(
-                                  height: 100,
-                                  width: 120,
-                                  child: Stack(
-                                    children: [
-                                      Image.asset(
-                                        hospitals[index].imageUrl,
-                                        width: width / 1.2,
-                                        fit: BoxFit.cover,
-                                      ),
-                                      Positioned(
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(10.0),
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              begin: Alignment.bottomCenter,
-                                              end: Alignment.topCenter,
-                                              colors: [
-                                                Colors.black.withOpacity(0.8),
-                                                Colors.transparent,
-                                              ],
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: SizedBox(
+                        height: 120,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: hospitals.length,
+                          itemBuilder: (context, index) {
+                            return SizedBox(
+                              width: 200,
+                              child: ListTile(
+                                title: ClipRRect(
+                                  borderRadius: BorderRadius.circular(13.0),
+                                  child: SizedBox(
+                                    height: 100,
+                                    width: 120,
+                                    child: Stack(
+                                      children: [
+                                        Image.asset(
+                                          hospitals[index].imageUrl,
+                                          width: width / 1.2,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        Positioned(
+                                          left: 0,
+                                          right: 0,
+                                          bottom: 0,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(10.0),
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                begin: Alignment.bottomCenter,
+                                                end: Alignment.topCenter,
+                                                colors: [
+                                                  Colors.black.withOpacity(0.8),
+                                                  Colors.transparent,
+                                                ],
+                                              ),
+                                            ),
+                                            child: Text(
+                                              hospitals[index].categoryName,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                                             ),
                                           ),
-                                          child: Text(
-                                            hospitals[index].categoryName,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Text(
+                      'v.0.0.1',
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                  )
                 ],
               ),
             ),

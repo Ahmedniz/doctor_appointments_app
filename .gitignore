@@ -46,3 +46,4 @@ app.*.map.json
 #APis ignore
 /lib/firebase_options.dart
 /lib/services/api_service.dart
+/android/app/google-services.json
